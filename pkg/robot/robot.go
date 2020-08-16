@@ -7,28 +7,11 @@ import (
 
 // Robot contains the configuration and state of the delta robot
 type Robot struct {
-	BaseRadius          float64 `json:"f"`
-	BicepLength         float64 `json:"rf"`
-	ForearmLength       float64 `json:"re"`
-	EndEffectorRadius   float64 `json:"e"`
-	BaseToFloorDistance float64 `json:"b"`
-
-	Motor1AngleMin float64
-	Motor1AngleMax float64
-	Motor2AngleMin float64
-	Motor2AngleMax float64
-	Motor3AngleMin float64
-	Motor3AngleMax float64
-}
-
-// RectangularCuboidEnvelope defines the envelope of the delta robot
-type RectangularCuboidEnvelope struct {
-	Xmin float64
-	Xmax float64
-	Ymin float64
-	Ymax float64
-	Zmin float64
-	Zmax float64
+	BaseRadius          float64 `json:"BaseRadius"`
+	BicepLength         float64 `json:"BicepLength"`
+	ForearmLength       float64 `json:"ForearmLength"`
+	EndEffectorRadius   float64 `json:"EndEffectorRadius"`
+	BaseToFloorDistance float64 `json:"BaseToFloorDistance"`
 }
 
 // Trigonometric constants
@@ -119,11 +102,10 @@ func (r *Robot) Inverse(x, y, z float64) (float64, float64, float64, error) {
 
 }
 
-// inverse kinematics
-// helper functions, calculates angle theta1 (for YZ-pane)
+// helper function, calculates angle theta1 (for YZ-pane)
 func (r *Robot) calcAngleYZ(x0, y0, z0 float64) (float64, error) {
-	y1 := -0.5 * 0.57735 * r.BaseRadius
-	y0 -= 0.5 * 0.57735 * r.EndEffectorRadius
+	y1 := -0.5 * tan30 * r.BaseRadius
+	y0 -= 0.5 * tan30 * r.EndEffectorRadius
 
 	// z = a + b*y
 	a := (x0*x0 + y0*y0 + z0*z0 + r.BicepLength*r.BicepLength - r.ForearmLength*r.ForearmLength - y1*y1) / (2.0 * z0)
